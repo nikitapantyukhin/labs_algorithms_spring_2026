@@ -1,0 +1,22 @@
+# --- VS Code ---
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# --- Сборка и исполняемые файлы (C/C++) ---
+*.o
+*.obj
+*.out
+*.exe
+*.so
+*.dylib
+*.a
+*.lib
+
+# --- Временные файлы ---
+*.log
+*.tmp
+*.bak
+.DS_Store

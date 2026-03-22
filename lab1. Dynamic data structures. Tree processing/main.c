@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h> 
+
+
+typedef struct Node {
+    int data;
+    struct Node *left;
+    struct Node *right;
+} Node;
+
+Node* createNode(int value) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode == NULL) return NULL;
+    newNode->data = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+Node* insert(Node* root, int value) {
+    if (root == NULL) return createNode(value);
+
+    if (value < root->data) {
+        root->left = insert(root->left, value);
+    } else { 
+        root->right = insert(root->right, value);
+    }
+    return root;
+}
+
+Node* findMin(Node* node) {
+    Node* current = node;
+    while (current && current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
+
+Node* deleteNode(Node* root, int value) {
+    if (root == NULL) return root;
+
+    if (value < root->data) {
+        root->left = deleteNode(root->left, value);
+    } else if (value > root->data) {
+        root->right = deleteNode(root->right, value);
+    } else {
+        if (root->left == NULL) {
+            Node* temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            Node* temp = root->left;
+            free(root);
+            return temp;
+        }
+        Node* temp = findMin(root->right);
+        root->data = temp->data;
+        root->right = deleteNode(root->right, temp->data);
+    }
+    return root;
+}
+
+void printTree(Node* root, int level) {
+    if (root == NULL) return;
+    printTree(root->right, level + 1);
+    for (int i = 0; i < level; i++) printf("    ");
+    printf("%d\n", root->data);
+    printTree(root->left, level + 1);
+}
+
+int getMinDepth(Node* root) {
+    if (root == NULL) return -1;
+
+    int depth = 0;
+    Node* current = root;
+    while (current->left != NULL) {
+        current = current->left;
+        depth++;
+    }
+    return depth;
+}
+
+void freeTree(Node* root) {
+    if (root == NULL) return;
+    freeTree(root->left);
+    freeTree(root->right);
+    free(root); 
+}
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+    
+    Node* root = NULL;
+    int choice, val;
+
+    while (1) {
+        printf("\n МЕНЮ \n");
+        printf("1. Добавить число\n");
+        printf("2. Удалить число\n");
+        printf("3. Показать дерево\n");
+        printf("4. Глубина минимальной вершины\n");
+        printf("5. Выход\n");
+        printf("Выбор: ");
+        
+        if (scanf("%d", &choice) != 1) break;
+
+        switch (choice) {
+            case 1:
+                printf("Введите число: ");
+                scanf("%d", &val);
+                root = insert(root, val);
+                break;
+            case 2:
+                printf("Какое число удалить: ");
+                scanf("%d", &val);
+                root = deleteNode(root, val);
+                break;
+            case 3:
+                printTree(root, 0);
+                break;
+            case 4:
+                val = getMinDepth(root);
+                if (val == -1) printf("Дерево пусто!\n");
+                else printf("Глубина минимальной вершины: %d\n", val);
+                break;
+            case 5:
+                freeTree(root);
+                return 0;
+            default:
+                printf("Ошибка! Выберите от 1 до 5.\n");
+        }
+    }
+    return 0;
+}

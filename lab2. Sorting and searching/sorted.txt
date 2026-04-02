@@ -1,0 +1,20 @@
+1 a This is the first sentence
+2 b Sorting algorithms are interesting
+3 c Data structures are important
+4 d Binary search is fast
+5 e Programming in C is powerful
+6 f Arrays store elements
+7 g Functions improve code structure
+8 h Memory management is tricky
+9 i Debugging takes time
+10 j Practice makes perfect
+11 k Algorithms solve problems
+12 l Code should be readable
+13 m Testing is necessary
+14 n Optimization is useful
+15 o Computers execute instructions
+16 p Variables store values
+17 q Loops repeat actions
+18 r Conditions control flow
+19 s Compilers translate code
+20 t Software needs maintenance

@@ -1,0 +1,20 @@
+20 t Software needs maintenance
+19 s Compilers translate code
+18 r Conditions control flow
+17 q Loops repeat actions
+16 p Variables store values
+15 o Computers execute instructions
+14 n Optimization is useful
+13 m Testing is necessary
+12 l Code should be readable
+11 k Algorithms solve problems
+10 j Practice makes perfect
+9 i Debugging takes time
+8 h Memory management is tricky
+7 g Functions improve code structure
+6 f Arrays store elements
+5 e Programming in C is powerful
+4 d Binary search is fast
+3 c Data structures are important
+2 b Sorting algorithms are interesting
+1 a This is the first sentence

@@ -1,20 +1,20 @@
-7 k Random data helps testing
-15 a C language is low level
-3 z Mistakes help learning
-20 b Sorting is essential
-9 m Practice improves skills
-1 d Always check input
-14 q Algorithms are everywhere
-6 x Code must be correct
-2 c Debugging is important
-18 p Binary search is efficient
-8 f Memory must be managed
-4 h Data must be structured
-11 l Functions simplify code
-5 t Errors must be fixed
-10 r Input output is needed
-19 e Software evolves
-13 n Logic is fundamental
-12 g Systems are complex
-16 y Performance matters
-17 j Understanding is key
+7 g Functions improve code structure
+15 o Computers execute instructions
+3 c Data structures are important
+20 t Software needs maintenance
+9 i Debugging takes time
+1 a This is the first sentence
+14 n Optimization is useful
+6 f Arrays store elements
+2 b Sorting algorithms are interesting
+18 r Conditions control flow
+8 h Memory management is tricky
+4 d Binary search is fast
+11 k Algorithms solve problems
+5 e Programming in C is powerful
+10 j Practice makes perfect
+19 s Compilers translate code
+13 m Testing is necessary
+12 l Code should be readable
+16 p Variables store values
+17 q Loops repeat actions

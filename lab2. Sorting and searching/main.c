@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
     int number;
@@ -10,131 +11,143 @@ typedef struct {
     char data[50];
 } Data;
 
-int key_comparison(Key key1, Key key2) {
-    if (key1.number != key2.number)
-        return key1.number - key2.number;
-
-    return key1.letter - key2.letter;
+int is_greater(Key k1, Key k2) {
+    if (k1.number > k2.number) return 1;
+    if (k1.number < k2.number) return 0;
+    return k1.letter > k2.letter;
 }
 
-void swap(Key *keys, Data *data_array, int i, int j) {
-    Key temp_key = keys[i];
+void swap_elements(Key *keys, Data *data_array, int i, int j) {
+    Key tempKey = keys[i];
     keys[i] = keys[j];
-    keys[j] = temp_key;
+    keys[j] = tempKey;
 
-    Data temp_data = data_array[i];
+    Data tempData = data_array[i];
     data_array[i] = data_array[j];
-    data_array[j] = temp_data;
+    data_array[j] = tempData;
 }
 
 void selection_sort(Key *keys, Data *data_array, int n) {
     for (int i = 0; i < n - 1; i++) {
         int min_ind = i;
-
         for (int j = i + 1; j < n; j++) {
-            if (key_comparison(keys[min_ind], keys[j]) > 0) {
+            if (is_greater(keys[min_ind], keys[j])) {
                 min_ind = j;
             }
         }
-
         if (min_ind != i) {
-            swap(keys, data_array, i, min_ind);
+            swap_elements(keys, data_array, min_ind, i);
         }
     }
 }
 
 int binary_search(Key *keys, Key search, int n) {
     int left = 0, right = n - 1;
-
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        int cmp = key_comparison(search, keys[mid]);
-
-        if (cmp == 0)
+        if (keys[mid].number == search.number && keys[mid].letter == search.letter) {
             return mid;
-        else if (cmp > 0)
+        }
+        if (is_greater(search, keys[mid])) {
             left = mid + 1;
-        else
+        } else {
             right = mid - 1;
+        }
     }
-
     return -1;
 }
 
 void print_table(Key *keys, Data *data_array, int n) {
-    printf("Index Key(number, let)  Data\n");
-
+    printf("\n%-14s  %-12s  %-s\n", "Индекс", "Ключ", "Данные");
     for (int i = 0; i < n; i++) {
-        printf("%5d (%2d, %c)           %s\n",
-               i,
-               keys[i].number,
-               keys[i].letter,
-               data_array[i].data);
+        printf("%-8d  %-2d %-5c  %s\n", i, keys[i].number, keys[i].letter, data_array[i].data);
     }
-    printf("\n");
-}
-
-void load_from_file(const char *filename, Key *keys, Data *data_array, int n) {
-    FILE *f = fopen(filename, "r");
-
-    if (!f) {
-        printf("Error opening file %s\n", filename);
-        exit(1);
-    }
-
-    for (int i = 0; i < n; i++) {
-        if (fscanf(f, "%d %c %[^\n]",
-                   &keys[i].number,
-                   &keys[i].letter,
-                   data_array[i].data) != 3) {
-            printf("Error reading file %s at line %d\n", filename, i);
-            exit(1);
-        }
-    }
-
-    fclose(f);
-}
-
-void run_test(const char *filename, Key *keys, Data *data_array, int n) {
-    printf("\nTEST: %s\n", filename);
-
-    load_from_file(filename, keys, data_array, n);
-
-    printf("\nBEFORE SORT\n");
-    print_table(keys, data_array, n);
-
-    selection_sort(keys, data_array, n);
-
-    printf("\nAFTER SORT\n");
-    print_table(keys, data_array, n);
 }
 
 int main() {
-    int n = 20;
+    int choice;
+    char filename[20];
 
-    Key keys[20];
-    Data data_array[20];
+    printf("Выберите файл для загрузки:\n");
+    printf("1 - Отсортированная таблица\n");
+    printf("2 - Обратная таблица\n");
+    printf("3 - Рандомная таблица\n");
+    printf("Ваш выбор: ");
+    scanf("%d", &choice);
 
-    run_test("sorted.txt", keys, data_array, n);
-    run_test("reverse.txt", keys, data_array, n);
-    run_test("random.txt", keys, data_array, n);
-
-    Key search;
-
-    printf("\nEnter key to search:\n");
-    printf("Number: ");
-    scanf("%d", &search.number);
-
-    printf("Letter: ");
-    scanf(" %c", &search.letter);
-
-    int index = binary_search(keys, search, n);
-
-    if (index != -1) {
-        printf("Found at index %d: %s\n", index, data_array[index].data);
-    } else {
-        printf("Not found\n");
+    switch(choice) {
+        case 1: strcpy(filename, "sorted.txt"); break;
+        case 2: strcpy(filename, "reverse.txt"); break;
+        case 3: strcpy(filename, "random.txt"); break;
+        default: printf("Неверный выбор\n"); return 1;
     }
 
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printf("Ошибка: не удалось открыть файл %s\n", filename);
+        return 1;
+    }
+
+    int capacity = 10;
+    int count = 0;
+    Key *keys = malloc(capacity * sizeof(Key));
+    Data *data_array = malloc(capacity * sizeof(Data));
+
+    int temp_num;
+    char temp_let;
+    char temp_text[100];
+
+    while (fscanf(file, "%d %c %[^\n]", &temp_num, &temp_let, temp_text) == 3) {
+        if (count >= capacity) {
+            capacity *= 2;
+            keys = realloc(keys, capacity * sizeof(Key));
+            data_array = realloc(data_array, capacity * sizeof(Data));
+        }
+        keys[count].number = temp_num;
+        keys[count].letter = temp_let;
+        strncpy(data_array[count].data, temp_text, 49);
+        data_array[count].data[49] = '\0';
+        count++;
+    }
+    fclose(file);
+
+    if (count < 17) {
+        printf("Ошибка: считано только %d элементов (нужно 17+)\n", count);
+        free(keys); free(data_array);
+        return 1;
+    }
+
+    printf("\nИСХОДНЫЕ ДАННЫЕ");
+    print_table(keys, data_array, count);
+
+    selection_sort(keys, data_array, count);
+
+    printf("\nРЕЗУЛЬТАТ СОРТИРОВКИ");
+    print_table(keys, data_array, count);
+
+    printf("\nБИНАРНЫЙ ПОИСК");
+    printf("\nВведите ключ (сначала ЧИСЛО, затем БУКВУ через пробел): ");
+    while (1) {
+        int res_scanf = scanf("%d %c", &temp_num, &temp_let);
+
+        if (res_scanf == 2) {
+            Key search_key = {temp_num, temp_let};
+            int result = binary_search(keys, search_key, count);
+            
+            if (result != -1) {
+                printf("Найдено в индексе [%d]. Данные: %s\n", result, data_array[result].data);
+            } else {
+                printf("Элемент c ключом {%d, %c} в таблице не найден.\n", temp_num, temp_let);
+            }
+            break;
+        } else {
+            printf("Ошибка! Нужно ввести СНАЧАЛА число, потом букву. Попробуйте еще раз: ");
+            
+            while (getchar() != '\n'); 
+        }
+    }
+
+    free(keys);
+    free(data_array);
     return 0;
 }
